@@ -1,0 +1,81 @@
+											DevOps on Cloud_Day 01
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Code Commit
+2. Code Build
+3. Code Deploy
+4. Code Pipeline
+5. Cloud Formation
+
+1 Project
+
+DevOps on Cloud
+----------------------------
+DevOps Tools: Git, GitHub, Maven, Jenkins, Docker, Ansible, Kubernetes, Terraform
+
+=> Just like the devops tools available outside of the aws cloud, we have some services in the AWS cloud which are related to DevOps.
+=> Some of the DevOps tools that are available in the aws cloud are;
+1. Code Commit 		-------> Git and GitHub
+2. Code Build			--------> Maven
+3. Code Deploy		--------> Jenkins
+4. Code Pipeline		--------> Jenkins
+5. Cloud Formation	       --------> Terraform
+
+=> All the above services are limited to only AWS Cloud
+=> All the above services will work as pay-as-you-use basis
+=> The above services are listed as AWS Developer Tools
+
+---------------------
+Code Commit
+---------------------
+Developers ---> Write the code ----> Testing ----> Code availability ----> Pull the code ----> Create the infrastructure ---> Deploy the code ----> Maintenance
+
+=> Code commit is something that is useful to store the source code of the application.
+=> Code Commit is serverless service
+
+Disadvantages:
+1. It is not flexible with other cloud service providers like GCP, Azure....
+2. It is not having multiple options (limitations)
+
+Install AWS CLI
+Windows: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+VS Code Editor
+
+AWS Code Commit Workflow
+------------------------------------
+1. Create (empty) Repository
+2. Clone the repo into the local system
+3. Create a file with some content inside it
+4. Push the changes to repo.
+
+Note: Code Commit is a region specific service
+
+By default, whatever repo that we create in the code commit service, they are all private repo
+
+Cloud Formation
+-------------------------------
+=> CF is an infrastructure creation tool in an automated way.
+=> In the CF, we will write CF Templates
+=> CF is AWS limited service
+=> Advanced tool for CF is Terraform
+
+=> In order to write the terraform templates, we will use YAML language
+=> YAML ---> Yet Another Markup Language
+YML
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
