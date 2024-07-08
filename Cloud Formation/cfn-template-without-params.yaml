@@ -1,0 +1,16 @@
+Resources:
+  MyFirstS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "kastro-sa-demo-1"
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: <Add AMI ID>
+      InstanceType: t2.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+
+

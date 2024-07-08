@@ -1,0 +1,34 @@
+Parameters:
+  ImageId:
+    Type: String
+  InstanceTypeParameter:
+    Type: String
+  
+Resources:
+  MyFirstS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "kastro-demo-cfn-01"
+      WebsiteConfiguration:
+        IndexDocument: index.html      
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceTypeParameter
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+
+Outputs: 
+  InstanceId:
+    Value: !Ref MyEC2Instance
+  PrivateIp:
+    Value: !GetAtt MyEC2Instance.PrivateIp
+  PrivateDnsName:
+    Value: !GetAtt MyEC2Instance.PrivateDnsName    
+  S3StaticWebsiteEndpoint:
+    Value: !GetAtt MyFirstS3Bucket.WebsiteURL 
+
+
