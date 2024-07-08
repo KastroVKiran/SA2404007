@@ -1,0 +1,99 @@
+												DevOps on Cloud_Day 02
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Code Commit
+2. Code Pipeline
+3. Project 1
+4. Code Build
+
+Code Commit
+----------------------------
+1. Create a repo in aws cloud
+2. Create an IAM User and attach AWSCodeCommitPowerUser permissions
+3. Generate HTTPS Credentials for the user created in step 2
+4. Clone the repo using VS Code Editor
+5. Create a file and commit the changes and push the file to code commit repo
+6. Verify the changes in the code commit repo.
+
+Code Pipeline
+-----------------------------------
+=> All the code suite services are serverless.
+=> Code Pipeline is similar to Jenkins
+=> Jenkins is a CI & CD Tool/Service
+=> By using CP, we are going to automate the application deployment
+
+Code --- CC Repo --- CP Service --- Deploy the code --- EC2 Instance
+
+=> Pipeline is the step by step execution of a job/task
+
+=> Office (10.00 AM) ---- 6.00 AM --- 8.00 AM --- 8.10 AM --- 9.30 AM --- 9.50 AM --- 10.00 AM --- Start working
+
+Ex: Access my App
+		--- Code --- CC Repo/S3 Bucket/GitHub Repo --- Create 2 buckets (source bucket, prod bucket) --- Enable the SWS --- Upload the code --- Create a pipeline with 2 steps (1st step-get the code from repo, 2nd step-deploy the code)
+
+Steps
+-------------
+1. Create 2 buckets
+	Bucket1: source-bucket, enable versioning
+	Bucket2: prod-bucket, Enable ACLs, 'Uncheck' the block all public access option, Enable Static Website Hosting
+2. Create a bucket policy (optional)
+3. Create a pipeline
+4. Upload the files in the bucket
+5. Access the app using SWH URL
+
+Project 1
+--------------------
+Code Pipeline + Code Deploy
+
+Repo URL: https://github.com/KastroVKiran/code-deploy-code-pipeline-project.git
+
+1st case ---- Code Commit Repo
+2nd case ---- S3 Bucket --- App deployment was made in s3 bucket using SWH concept
+3rd case ---- GitHub Repo --- App deployment will be made in ec2 instance
+
+Code deploy and code build are almost same.
+Code deploy is used to deploy the code into the ec2 instances
+Code deploy is similar to Jenkins
+
+Files for various DevOps Services
+-----------------------------------------------
+1. Jenkins --- Jenkinsfile
+2. Docker --- Dockerfile
+3. Ansible --- .yml files
+4. Terraform --- .tf files
+
+=> In code deploy we will write a configuration file which is known as 'appspec.yml' file
+
+=> YML is a scripting language
+
+=> YAML or YML ----> Yet Another Markup Language
+
+Steps
+----------
+1. Repo URL: https://github.com/KastroVKiran/code-deploy-code-pipeline-project.git
+2. Code Deploy
+	2.1 IAM User
+	2.2 Create a role
+3. Launch 1 ubuntu VM
+4. Pipeline
+
+Role Name:  project1_role
+Role Name (only for code deploy): code-deploy-role
+
+1. Code in repo
+2. Create a App in Code Deploy service
+3. Create a deployment group
+	3.1. IAM Role
+	3.2. Launch Ubuntu VM with userdata. And, attach the IAM role created in 3.1 step 
+	3.3. Create one more role only for code deploy
+	3.4. Now create the deployment group and attach the role created in step 3.3.
+4. Create pipeline
+5. Access the application using Public IP of instance
+
+
+
+
+
+
+
+
+
