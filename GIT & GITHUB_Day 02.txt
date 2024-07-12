@@ -1,6 +1,7 @@
 											GIT & GITHUB_Day 02
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Note: All git commands will start with 'git'
+Note: Git configurations and git initialization is a one time activity, provided if the configurations and initialized folder is not deleted
 
 1. Configuration of global credentials in git
 git config --global user.name "Kastro"
