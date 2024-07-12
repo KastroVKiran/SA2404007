@@ -1,0 +1,98 @@
+											GIT & GITHUB_Day 02
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note: All git commands will start with 'git'
+
+1. Configuration of global credentials in git
+git config --global user.name "Kastro"
+git config --global user.email "kastrok@gmail.com"
+
+2. Verification of username and email
+git config --global user.name ----> You should see the user name that you have configured
+git config --global user.email ----> You should see the user email that you have configured
+
+3. How to remove the existing credentials
+git config --global --unset user.name
+git config --global --unset user.email
+
+4. How to see the list of user names and email ids configured?
+git config --list --show-origin
+
+5. Git workflow process
+1. Initialize the git					------> git init
+2. Create files						------> touch <FileName>
+3. Check the status of the files			------> git status
+4. Add files to the staging area		------> git add . (or) git add <FileName> (or) git add python*
+5. Check the status of the files			------> git status
+6. Commit the files					------> git commit -m "<CommitMessage>" (or) git commit -m <CommitMessage> python*
+
+6. Renaming a file
+git mv <OldFileName> <NewFileName>
+
+7. To see the list of all git commands
+git help -a
+
+Commands in git are divided into 2 categories;
+1. Porcelean commands	----> High level commands ---- used commonly
+2. Plumming commands ----> Low level commands ---- used according to the requirement
+
+8. To know the details about a particular command;
+git help <CommandName> ---> The default browser will open with all the details of that specific command
+
+9. To see the detailed commit history
+git log
+Press 'q' to comeout of the commit history
+
+10. To see the simplified commit history
+git log --oneline
+
+11. To see the history of a specific commit
+git show <CommitID>
+
+Note: Commit ids are of 40 character in length
+
+12. To see the specific commits from the latest
+git log -2 ----> Latest 2 commits will get displayed
+git log -5 ----> Latest 5 commits will get displayed
+
+13. To delete a file
+git rm <FileName>
+
+14. To recover a file
+<Self Practice> -- Do it on your own
+
+15. To see the commit history in reverse order
+git log --reverse
+
+16. To see the commit history in reverse order but in oneline
+git log --oneline --reverse
+
+17. How to see the top commits?
+git show HEAD
+
+18. To see the hidden folders/files in git terminal
+ls -la
+
+19. To remove the .git folder
+rm -rf .git
+Note: It is not recommended to delete the .git folder
+
+20. To unstage a staged file
+git restore --staged <FileName>
+
+21. To see the status of a file in shortcut
+git status -s
+
+If you see "??" in red colour, this means the file is not being tracked by git (unstaged file)
+If you see "A" in green colour, this means the file is added to the staging area
+
+22. To know the author details;
+1. To see the author name of a file/specific line ----> git blame <FileName>
+2. To see the email of a file/specific line ----> git blame -e <FileName>
+3. To see the author details of a specific line ----> git blame -L 2,2 <FileName> --- This command will display the author details of line 2 only
+4. git blame -L 1,3 <FileName> --- This command will display the author details from line 1 to line 3 
+5. git blame -L 1,+2 <FileName>
+
+
+
+
+
