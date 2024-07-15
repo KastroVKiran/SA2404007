@@ -1,0 +1,90 @@
+												GIT & GITHUB_Day 03
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Previous Assignment: Recovering a deleted file
+
+1. Introduction to GitHub
+2. Public Vs Private Repository
+3. How to create a GitHub account
+4 Creating a public repository
+5 Pushing the Code from Local to Remote Repo.
+6 Understanding the importance of .git folder (config file)
+7 Cloning the Code to Local from Remote Repo.
+8 Deleting a repository
+9 Pushing the maven project available in local system to remote repo.
+10 Fork a repository
+
+
+GitHub
+-------------
+=> GitHub is GUI based
+=> To send/get the code from GitHub, we need to have the internet connectivity
+=> GitHub is used to store the source code of the application/website
+=> In GitHub we can create the repositories. Those repos are called as GitHub Repos
+
+Repository
+--------------------
+=> Repository is a place where we store the code in the GitHub
+=> Types of repos;
+	1. Public Repo.	---> Whatever things that we store in the public repo., are available in public domain
+	2. Private Repo.	---> Private repo is used to secure the code/files/...
+=> In real-time, we will create the private repos
+=> For every repo we create in the GitHub, we will get a repository URL. (Repo URL)
+=> The use of repo url is to connect to the repo (push/pull/access the data...)
+=> Types of repo URLs
+	HTTPS ---> https://github.com/KastroVKiran/maven-app-1.git ---> Used for public repos
+	SSH		---> git@github.com:KastroVKiran/maven-app-1.git ---> Used for private repos
+
+
+How to create a GitHub account?
+-------------------------------------------
+GitHub Account Creation URL: https://github.com/
+
+Creation of GitHub Public Repo.
+----------------------------------------------
+
+
+Push the code to remote repo from local system
+-------------------------------------------------------------
+Create file(s)
+Add, Commit the file(s)
+Send the file(s) to the remote repo (GitHub) from the local system (My PC)
+	PAT - Personal Access Token
+
+How to convert a public repo to a private repo
+------------------------------------------------------------------------
+Open any Public repo ----> Settings ----> Scroll down to Danger zone ---> Click on "Change repository visibility" to change the repo type
+
+To get the files from Remote repo to the local system
+-----------------------------------------------------------------
+The concept of 'Git Cloning' is used to get the changes from remote repo to the local repo
+
+git clone <Repo.URL>
+
+How to work with PAT
+-----------------------------------
+PAT is used when we haven't configured GitHub into the local system
+
+Pushing the maven project available in local system to remote repo.
+----------------------------------------------------------------------------------------
+
+
+Fork a repository
+-------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
