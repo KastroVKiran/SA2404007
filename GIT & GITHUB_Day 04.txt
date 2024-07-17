@@ -1,0 +1,47 @@
+												GIT & GITHUB_Day 04
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Git Stash
+2. Recovering a deleted file
+3. Git Branches
+
+Git Stash
+-----------------
+=> Git Stash is used to store the work in a temporary location
+
+Recovering a deleted file
+--------------------------------
+1. Create a file, add the file, commit the file
+2. Remove the file (git rm <FileName>)
+3. Commit the changes (git commit -m "CommitMessage")
+4. See the commit history of the deleted file (git log --online -- <FileName>)
+5. To restore the file (git checkout <2nd commit id from top> <FileName>)
+6. Commit the restored file (git commit -m "CommitMessage")
+7. To verify, ls ----> You will see the deleted file
+
+
+
+Git Branches
+----------------------
+Git Branches are used to maintain a separate code base for each team working for the project
+By default, whenever we create a GitHub repo, we will get a branch which is known as MASTER Branch
+
+Repo.: PhonePe
+Dev, Ops, Test, R&D
+Dev - 10 people - Dev Branch
+Ops - 5 - Ops Branch
+Test - 3 - Test Branch
+R&D - 2 - R&D Branch
+
+PhonePe - Recharge, Tickets, Insurance, Gas
+
+Note: Whenever we create a new branch from the existing branch, all the files that are available in the exiting branch will automatically gets copied to the new branch
+
+Git Ignore
+-----------------
+I will create some files but i dont to track them and i also dont want to commit them
+
+
+
+
+
