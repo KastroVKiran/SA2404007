@@ -1,0 +1,126 @@
+											GIT & GITHUB_Day 05
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Git Branches (Continuation to Day 4)
+	Renaming a Branch
+	Delete a Branch
+	Recover a Deleted Branch
+	Git Merge
+	Git Rebase
+	Merge Conflicts
+	Cherry Pick
+2. Collaborators in GitHub
+3. Creating a task in GitHub
+4. Git Diff
+
+Assignment
+---------------------
+5. Git Revert
+6. Git Reset
+7. Git Squash
+
+Renaming a Branch using Git Terminal
+-----------------------------------------------------
+git branch -m <OldBranchName> <NewBranchName>
+
+Renaming a Branch in GitHub
+-----------------------------------------------------
+
+Pull Request
+---------------------
+To get all the files available in one branch into the another branch
+
+Deleting a branch
+----------------------
+git branch -D <BranchName>
+
+If you want to get the files available in a remote repo of a specific branch into local system;
+git pull origin <OrignName>
+
+Git Merging
+---------------------
+Merging is the concept of merging one branch files with another branch files
+
+git merge <BranchName>
+
+Git Rebase
+-----------------
+It is also used to add files from one branch to another branch
+
+insurance, master
+If i want to get the files from insurance branch into the master branch
+git rebase <BranchName>
+Ex: git rebase insurance
+
+Merge Vs Rebase
+---------------------
+Merge will show files, rebase will not show the files
+Merge will show the entire history, rebase will not show the history
+Merge will not show branches, rebase will show the branches
+
+Merge Conflicts
+-------------------------
+Branch 1 ---- File 1 (java) ---- Developer 1
+Branch 2 ---- File 1 (python) ---- Developer 2
+
+Cherry Pick
+-----------------
+
+
+Collaborators in git
+------------------------------
+
+
+Git Diff
+----------------
+To know the changes of a file, we will use git status
+To know the changes we have made inside a file, we will use Git Diff
+
+Git Diff will compare the differences b/w what is there in working directory with what is there in the staging area of the same file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Git Squash
+----------------------
+The purpose of git squash is to merge the two or more commits into a single commit
+
+
+
+
+
+
+
+
