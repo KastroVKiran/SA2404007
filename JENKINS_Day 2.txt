@@ -1,0 +1,97 @@
+												JENKINS_Day 02	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Jenkins Console
+2. Types of Jenkins Projects
+3. Exploring FREE STYLE PROJECT Options
+4. Project 1
+5. Build Triggers
+5.1. Build Periodically
+5.2. Poll SCM
+
+In Jenkins, we will create Jobs and hence we call them as Jenkins Jobs
+Job = Task
+
+Using the option of 'Manage Jenkins' we will configure the additional plugins, configurations...
+
+Types of Jenkins Projects/Jobs
+------------------------------------------
+In general, there are two types of Jenkins jobs
+1. Freestyle project - using Jenkins console (GUI) we will create the freestyle projects
+2. Pipeline project - using the script(s) we will create the pipeline projects
+
+How to create a freestyle project?
+-----------------------------------------------
+Connect to the Jenkins console
+
+1. Click on 'New Item'
+2. Select the type of project (Freestyle)
+3. You can see 6 steps to configure a Jenkins job. According to the requirement, we will select the step(s)
+4. Execute the job
+5. Check the status of the job
+6. Execution Process
+
+--------------------------------------
+Project 1: Build Process
+--------------------------------------
+Jenkins + Maven + GitHub
+
+Configuration 1: Install GIT in the ec2 instance
+Configuration 2: Configure Java s/w in the Jenkins dashboard
+Configuration 3: Configure Maven in the Jenkins dashboard
+
+Git will typically have the latest version only.
+
+JAVA - 08, 11, 18, 21, 22...
+Maven - 3.9.6, 3.9.2, 3.9.8, 3.9.0...
+ The versions of java and maven s/w will change based on the projects
+
+
+The s/w which changes the versions based on the project are to be configured in the Jenkins dashboard
+The s/w which doesnot changes the versions based on the project are to be configured in the EC2 Instance only
+
+The above project demonstrates the build process
+
+-----------------------
+Build Triggers
+-----------------------
+Build triggers automates the job execution
+
+
+To schedule the job, we will use CRON Expression
+
+* * * * * (Every minute the build will get executed)
+H * * * * (Every one hour the build will get executed)
+H/2 * * * * (Every half an hour the build will get executed)
+
+URL for CRON Expression Creation
+https://crontab.guru/
+
+--------------------------
+Build Periodically
+--------------------------
+Irrespective of code changes happening in the GitHub repo, the Jenkins job will get automatically executed based on the cron expression
+
+-------------------
+Poll SCM
+-------------------
+Poll SCM will look for changes in the GitHub repo, only if there is a change in the source code of GitHub the job will get executed.
+
+
+Manual Build < Build Periodically < Poll SCM < GitHub Web Hooks
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
