@@ -1,0 +1,231 @@
+
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                // Add your build steps here, e.g., sh 'mvn clean install'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                // Add your test steps here, e.g., sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Add your deploy steps here, e.g., sh 'scp target/*.war user@server:/path/to/deploy'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+
+In this example:
+agent any specifies that the pipeline can run on any available agent.
+stages define a sequence of stages (Build, Test, Deploy).
+Each stage contains steps which are the actual commands or actions to be executed.
+The post block defines actions to be taken after the pipeline execution, depending on the outcome (success or failure).
+
+
+Scripted (Groovy) Pipeline
+Example Scripted Pipeline Script:
+node {
+    try {
+        stage('Build') {
+            echo 'Building...'
+            // Add your build steps here, e.g., sh 'mvn clean install'
+        }
+
+        stage('Test') {
+            echo 'Testing...'
+            // Add your test steps here, e.g., sh 'mvn test'
+        }
+
+        stage('Deploy') {
+            echo 'Deploying...'
+            // Add your deploy steps here, e.g., sh 'scp target/*.war user@server:/path/to/deploy'
+        }
+    } catch (Exception e) {
+        currentBuild.result = 'FAILURE'
+        echo 'Pipeline failed: ' + e.message
+    } finally {
+        if (currentBuild.result == 'FAILURE') {
+            echo 'Sending failure notification...'
+            // Add your notification steps here, e.g., mail to: 'team@example.com', subject: 'Build failed', body: '...'
+        } else {
+            echo 'Pipeline completed successfully.'
+        }
+    }
+}
+
+In this example:
+The node block designates the script to run on a Jenkins agent.
+stage blocks define different phases of the pipeline (Build, Test, Deploy).
+try-catch-finally blocks are used for error handling and notifications.
+The currentBuild.result is used to track the status of the pipeline.
+
+Key Differences
+Syntax and Structure: Declarative Pipelines are more structured with a specific syntax, making them easier to write and read. Scripted Pipelines use Groovy scripting, offering more flexibility and control over the pipeline logic.
+Error Handling: Declarative Pipelines provide built-in post blocks for handling different pipeline outcomes. Scripted Pipelines require explicit try-catch blocks for error handling.
+Flexibility: Scripted Pipelines allow the use of the full range of Groovy features and are better suited for more complex scenarios. Declarative Pipelines are more limited but easier to maintain.
+
+
+PROJECT 3
+--------------------
+Repo URL: https://github.com/KastroVKiran/Netflix-Pipeline-Project.git
+
+In this project, we will configure 3 stages in the pipeline script
+
+Stage 1: Github Stage ----> Cloning the code/project repo
+
+Stage 2: Maven Stage -----> Build & Package the code (clean package)
+
+Stage 3: Deploy Stage -----> Deployment of the application
+
+---------------------
+Stage 1 - Script
+---------------------
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone the Code') {
+            steps {
+                git credentialsId: 'git-creds', url: 'https://github.com/KastroVKiran/Netflix-Pipeline-Project.git'
+            }
+        }
+    }
+}
+
+---------------------
+Stage 2 - Script
+---------------------
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone the Code') {
+            steps {
+                git credentialsId: 'git-creds', url: 'https://github.com/KastroVKiran/Netflix-Pipeline-Project.git'
+            }
+        }
+        stage('Maven Build Stage') {
+            steps {
+                script {
+                    def mavenHome = tool name: "maven s/w", type: "maven"
+                    def mavenCMD = "${mavenHome}/bin/mvn"
+                    sh "${mavenCMD} clean package"
+                }
+            }
+        }
+    }
+}
+
+---------------------
+Stage 3 - Script
+---------------------
+Note: Before writing stage 3, run the below commands in MobaXTerm
+sudo visudo
+
+Note: #Add the following line at the end of the file, assuming the Jenkins user is 'jenkins'
+jenkins ALL=(ALL) NOPASSWD: /bin/cp
+
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone the Code') {
+            steps {
+                git credentialsId: 'git-creds', url: 'https://github.com/KastroVKiran/Netflix-Pipeline-Project.git'
+            }
+        }
+        stage('Maven Build Stage') {
+            steps {
+                script {
+                    def mavenHome = tool name: "maven s/w", type: "maven"
+                    def mavenCMD = "${mavenHome}/bin/mvn"
+                    sh "${mavenCMD} clean package"
+                }
+            }
+        }
+        stage('Deploy Stage') {
+            steps {
+                script {
+                    sh 'sudo cp target/NETFLIX-1.2.2.war /root/apache-tomcat-9.0.90/webapps'
+                }
+            }
+        }
+    }
+}
+
+
+
+
+----------------
+Final Script
+----------------
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone the Code') {
+            steps {
+                git credentialsId: 'git-creds', url: 'https://github.com/KastroVKiran/Netflix-Pipeline-Project.git'
+            }
+        }
+        stage('Maven Build Stage') {
+            steps {
+                script {
+                    def mavenHome = tool name: "maven s/w", type: "maven"
+                    def mavenCMD = "${mavenHome}/bin/mvn"
+                    sh "${mavenCMD} clean package"
+                }
+            }
+        }
+        stage('Deploy Stage') {
+            steps {
+                script {
+                    sh 'sudo cp target/NETFLIX-1.2.2.war /root/apache-tomcat-9.0.90/webapps'
+                }
+            }
+        }
+    }
+}
+
+
+
+-----------------------------------------
+Configuration of Email in Jenkins
+-----------------------------------------
+Step1) Installation of 'Mailer Plugin'
+Dashbboard ----> Manage Jenkins ----> Plugins ----> Available Plugins ----> Select 'Mailer Plugin' ----> Install
+
+Step2) Email Configuration
+Dashbboard ----> Manage Jenkins ----> System Configuration: System ----> Scroll down to 'E-mail notification' ----> SMTP Server ----> To setup the details for SMTP server, we will use SES service in AWS ----> Goto AWS ----> Goto SES Service ----> Click on 'Identities' (leftpane) ----> Create identity ----> Identity type: 'Check' Email address ----> Email address: <Provide email id> ----> Create identity
+
+Goto email provided above and confirm the verification by clicking on the link received in email
+
+Click on SMTP settings (leftpane) ----> You can see the SMTP endpoint and StartTLSPort ----> Goto the jenkins dashboard ----> SMTP Server: <Paste the SMTP Endpoint for SES Console> ----> Click on 'Advanced' ----> 'Check' Use SMTP Authentication ----> To get username and password, goto SES service ----> SMTP Settings (leftpane) ----> Click on Create SMTP Credentials ----> Username: jenkins-kastro ----> Create user ----> You can see IAM username as 'jenkins-kastro', SMTP username and SMTP password also ----> Go to the jenkins console ----> Username: <paste the username from AWS console> ----> Password: <paste the password from AWS console> ----> 'Check' use TLS ----> SMTP Port: 587 ----> Reply-to-address: <provide email id> ----> Scroll up to 'Jenkins Location' ----> System admin email address: <provide email id> ----> 'Check' Test configuration by sending test e-mail ----> Test email receipient: <Provide email id> ----> Click on 'Test configuration' to receive a test email from jenkins ----> You can see 'email was successfully sent' ----> Apply ----> Save ----> Go to email to check the test email
+
+Step3) Email integration with job
+Open any existing job ----> Configure ----> Post build actions ----> You can see the 'email notification'. Click on it. ----> Recepient: <Provide email id> ----> 'Check' send email for every unstable build, and 'Check' Send separate emails to individuals who broke the builds ----> In the build steps, add a simple shell script with some error inside the script. So that build fails, then we will get the email. ----> Apply ----> Save ----> Click on Build now ----> Make sure the build is failed ----> Goto email to check for notification.
+
+Now correct the script in the job ----> Then click on build now ----> Once the build is success. You will get an email notification.
+
+https://github.com/KastroVKiran/Jenkins-Pipeline-Tutorial.git
+
