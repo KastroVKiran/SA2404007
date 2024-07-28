@@ -1,0 +1,233 @@
+													Jenkins_Day5
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Recover a deleted job
+2. Email notification in Jenkins
+3. RBAC 
+4. Master Slave Architecture
+5. Changing Jenkins Port number (Self Study)
+6. Integration of private GitHub repo using PAT
+
+10.00 AM - job1 - 2 stages (clone, build)
+Full backup
+
+11.00 AM - job1 - configured additional settings (clone, build) (deploy)
+Differential backup
+
+Max number of backup sets: 10
+1 2 3 4 5 6 7 8 9 10 
+2 3 4 5 6 7 8 9 10 11
+3 4 5 6 7 8 9 10 11 12
+4 5 6 7 8 9 10 11 12 13
+---------------------------------------------------
+How to get a backup of jenkins jobs?
+---------------------------------------------------
+Dashboard ----> Manage jenkins ----> Plugins ----> Available plugins ----> Select 'ThinBackup' and install it ----> Once after installing the plugin, Goto 'Manage jenkins', scroll down to 'Tools and Actions', you can see 'ThinBackup' option ----> Click on 'ThinBackup', you can see 'Backup now', and 'restore' options ----> Goto Manage Jenkins ----> System ----> Scroll down to 'ThinBackup Configuration' ----> Backup directory: /var/lib/jenkins/backup ----> Backup schedule for full backups: H * * * * ----> Backup schedule for different backups: H * * * * ----> Max number of backup sets: 5 (when the 6th backup gets created, the 1st backup will get deleted) ----> Check all the options as per the requirement, provide 120 as the number under 'Force jenkins to quiet mode after specified minutes' ----> Apply ----> Save
+
+Jenkins dashboard ----> Manage jenkins ----> Scroll down to 'Tools and Actions' ----> Click on 'ThinBackup' ----> Click on 'Backup Now' ----> If you see an error message like 'A problem occured while processing the request'; execute the below commands in MobaXTerm to give necessary permissions
+
+sudo mkdir -p /var/lib/jenkins/backup
+sudo chown -R jenkins:jenkins /var/lib/jenkins/backup
+sudo chmod -R 755 /var/lib/jenkins/backup
+
+Restart the jenkins ----> sudo systemctl restart jenkins
+
+Goto MobaXTerm ----> Goto cd /var/lib/jenkins/backup ----> ls -l ----> You can see the backup directory ----> Go inside the backup directory and click ls -l  ----> You will see all the backup files.
+
+Lets see how to recover the deleted job
+------------------------------------------------
+Create a job ----> Build the job atleast once ----> Delete the job ----> Lets recover ----> Goto Manage Jenkins ----> scroll down to 'Tools and Actions', and click on 'ThinBackup' option ----> Click on 'Restore' ----> Select the backup directory (currently we have only one backup, so select the available backup) ----> Click on 'Restore' ----> But you will not be able to see the recovered job. For that we have restart the jenkins
+
+Restart the jenkins ----> sudo systemctl restart jenkins
+
+Login into the jenkins again ----> You can see the deleted job now ----> Go inside the job, You can also see the builds also got restored
+
+
+
+-----------------------------------------
+Configuration of Email in Jenkins
+-----------------------------------------
+Step1) Installation of 'Mailer Plugin'
+Dashbboard ----> Manage Jenkins ----> Plugins ----> Available Plugins ----> Select 'Mailer Plugin' ----> Install
+
+Step2) Email Configuration
+Dashboard ----> Manage Jenkins ----> System Configuration: System ----> Scroll down to 'E-mail Notification' ----> SMTP Server ----> To setup the details for SMTP server, we will use SES service in AWS ----> Goto AWS ----> Goto SES Service ----> Click on 'Identities' (leftpane) ----> Create identity ----> Identity type: 'Check' Email address ----> Email address: <Provide vaild email id> ----> Create identity
+
+Goto email provided above and confirm the verification by clicking on the link received in email
+
+Click on SMTP settings (leftpane) ----> You can see the SMTP endpoint and StartTLSPort ----> Goto the jenkins dashboard ----> SMTP Server: <Paste the SMTP Endpoint for SES Console> ----> Click on 'Advanced' ----> 'Check' Use SMTP Authentication ----> To get username and password, goto SES service ----> SMTP Settings (leftpane) ----> Click on Create SMTP Credentials ----> Username: jenkins-kastro ----> Create user ----> You can see IAM username as 'jenkins-kastro', SMTP username and SMTP password also ----> Go to the jenkins console ----> Username: <paste the username from AWS console> ----> Password: <paste the password from AWS console> ----> 'Check' use TLS ----> SMTP Port: 587 ----> Reply-to-address: <provide email id> ----> Scroll up to 'Jenkins Location' ----> System admin email address: <provide email id> ----> 'Check' Test configuration by sending test e-mail ----> Test email receipient: <Provide email id> ----> Click on 'Test configuration' to receive a test email from jenkins ----> You can see 'email was successfully sent' ----> Apply ----> Save ----> Go to email to check the test email
+
+Step3) Email integration with job
+Open any existing job ----> Configure ----> Post build actions ----> You can see the 'email notification'. Click on it. ----> Recepient: <Provide email id> ----> 'Check' send email for every unstable build, and 'Check' Send separate emails to individuals who broke the builds ----> In the build steps, add a simple shell script with some error inside the script. So that build fails, then we will get the email. ----> Apply ----> Save ----> Click on Build now ----> Make sure the build is failed ----> Goto email to check for notification.
+
+Now correct the script in the job ----> Then click on build now ----> Once the build is success. You will get an email notification.
+
+
+----------------------
+RBAC
+------------------------
+=> Roll Based Account Control
+Jenkins - Admin - All permissions
+Jenkins - Users - Limited permissions
+
+=> By default, the user for Jenkins is 'Admin User'
+=> To verify the users of Jenkins ----> cd /var/lib/jenkins ----> cd users ---> ls ---> You will see a file "users.xml"----> You can see the users
+
+=> In order to restrict the permissions to all the team members working for the same project, we have to create Jenkins users with limited/required permissions.
+
+=> This can be made by creating users in the jenkins.
+
+=> Jenkins users have to be created, because the jenkins admin cannot share the id and password for security reasons.
+
+Creation of users in jenkins
+---------------------------------
+Jenkins console ---> Manage jenkins ---> Scroll down to see 'Users' under 'Security' option; and click on it ---> Click on 'Create User' ---> Username: kiran, Password: password, Provide the other details also ---> Click on 'Create User'
+
+Reference:
+Jenkins Admin: kastro ---> All permissions
+Jenkins Users: vasu, manoj ---> All permissions will come by default
+
+How to set permissions for jenkins users?
+-----------------------------------------------------
+Jenkins console ----> Manage jenkins ----> Security ----> Security Realm: jenkins own user database ----> 'uncheck' allow users to signup ----> Autherization: Select 'Project based Matrix Autherization Strategy' (or) 'Matrix based Security' ----> Add user ----> username: enter the user you have created ----> ok ----> Give the permissions accordingly in the matrix
+
+Logout from admin account.
+
+Login using user credentials and see the changes.
+
+
+
+--------------------------------------------------
+JENKINS MASTER and SLAVE - Demo
+--------------------------------------------------
+EC2 Instance (t2.micro, 8 GB) --- Jenkins ---- Configurations
+						 --- tomcat ---- Configurations
+						 --- docker ---- Configurations
+
+Master - EC2 Instance - Jenkins, Create the jobs, Java 
+Slave - EC2 Instance - to build the jobs
+
+To reduce the issues related to downtime of Jenkins server, we will create a slave node where we will use it for building/storing the jobs
+
+
+Connect to jenkins master node.
+
+Launch one or two new instances (slave 1 and slave 2)
+
+Connect to slave 1 in Moba
+$ sudo amazon-linux-extras install java-openjdk11 -y
+
+Setup the slave server
+--------------------------------
+Jenkins Console ----> Manage jenkins ----> System Configuration: Nodes ----> New node ----> Name: Slave1, "Check" permanent agent ----> Create.
+
+No. of executors: 3 (3 builds will execute parallelly) ----> Remote root directory: /tmp (It is a place where we want to store the build output. I want to store my output of my jenkins in 'tmp' folder) ----> Labels: slave1 ----> Usage: "Only build jobs with label expressions matching this node" (It means, if i give slave1 i.e label name:, then only it will build the job) ----> Launch method: Launch agents via SSH, Host: Private IP of slave1 VM, Credentials: Click on Add ----> Select 'Jenkins' ----> Domain Name: Global credentials, Kind: SSH Username with private key, Username: ec2-user, Private key: "Check" enter directly ----> Add: Paste the content in pem file that is used to launch the slave node ---> Add ----> Credentials: Select 'ec2-user'  ----> Host key verification strategy: non verifying verification strategy ----> Save. (Here we will give username and password for the server)
+
+You can see the SLAVE 1
+
+Create a job with git repo ----> Build steps: Invoke top level maven targets ----> Goals: clean package ----> Save ----> Apply
+
+Click on Build Now ----> By default when we click on build now, the build gets saved on master node. To verify this, Click on build number ----> Console output ----> You can see "Building on the built-in node." Here 'built-in node' means master node.
+
+The purpose of master and slave concept is, I want to build the jobs on worker/slave node, so that the load on master node will be reduced.
+
+Connect to Worker Node 1 in Moba ----> cd /tmp/ ----> ls ----> You dont see the output
+Connect to Master Node in Moba ----> cd /tmp/ ----> ls ----> You will see the output as 'workspace'
+
+Lets see how to add slave-1, on which we need to do the builds
+----------------------------------------------------------------------------
+Goto the Job ----> Configure ----> General ----> "Check" Restrict where this project can be run  ----> Label expression: slave1 ----> Apply ----> Save.
+Click on Build now.
+
+But you will see the build failure.
+This failure is because, we didnot install maven and git on slave1.
+
+Connect to slave1 ----> (You are currently pointing to 'tmp' folder) ----> sudo yum install git java-1.8.0-openjdk maven -y
+
+Goto the Job ----> Click on Build Now ----> Click on build number ----> Console output ----> You can see "Building remotely on Slave1" and the path where the build got stored.
+
+Goto the slave1 connected tab in Moba ----> cd tmp ----> ls ----> You will see "workspace" directory ----> cd workspace ----> ls ----> You will see the job name ----> cd <job-name> ----> ls ----> cd target ----> You will see the "war" file.
+
+This is how we can reduce the load on master, by building the jobs on worker nodes.
+
+-----------------------------------------------------------
+Setup Slave2, following the above process.
+-----------------------------------------------------------
+Jenkins Console ----> Manage jenkins ----> Nodes ----> New node ----> Name: Slave2, "Check" permanent agent ----> Create.
+No. of executors: 3 (3 builds will execute parallely) ----> Remote root directory: /tmp (It is a place where we want to store the build output. I want to store the output of my jenkins  jobs in 'tmp' folder) ----> Labels: slave2 ----> Usage: "Only build jobs with label expressions matching this node" (It means, if i give slave1 i.e label name:, then only it will build the job) ----> Launch method: Launch agents with SSH, Host: Private IP of slave2 VM, Credentials: Click on Add ----> Select 'Jenkins' ----> Domain Name: Global credentials, Kind: SSH Username with private key, Username: ec2-user, Private key: "Check" enter directly ----> Add: Paste the content in pem file that is used to launch the slave node 2, Credentials: Select 'ec2-user'  ----> Host key verification strategy: non verifying verification strategy ----> Save. (Here we will give username and password for the server)
+
+You can see the OFFILINE for SLAVE 2
+
+What is the reason?
+
+Jenkins ----> Manage Jenkins ----> Nodes ----> slave2 ----> Log (leftpane) ----> You can see 'Launch Failed'. Above that, you can also see 'Java not found on hudson'.
+
+So, we have to install Java on slave2
+
+Connect to slave2 in moba ----> sudo amazon-linux-extras install java-openjdk11 -y
+
+Goto Jenkins Console ----> Dashboard ----> Nodes ----> slave2 ----> Status (Leftpane) ----> Click on 'Launch agent' ----> You can see "agent successfully connect and online." 
+
+Lets build the job on worker node 2 ----> Jenkins job ----> Configure ----> General ----> "Check" Restrict where this project can be run  ----> Label expression: slave2 ----> Apply ----> Save.
+Click on Build now.
+But you will see the build failure.
+This failure is becasue, we didnot install maven and git on slave2.
+
+Connect to slave2 ----> (You are currently pointing to 'tmp' folder) ----> yum install git java-1.8.0-openjdk maven -y
+
+Goto the Job ----> Click on Build Now ----> Click on build number ----> Console output ----> You can see "Building remotely on Slave2" and the path where the build got stored.
+
+Goto the slave2 connected tab in Moba ----> cd tmp ----> ls ----> You will see "workspace" directory ----> cd workspace ----> ls ----> You will see the job name ----> cd <job-name> ----> ls ----> cd target ----> You will see the "war" file.
+
+To see the load of master and slave nodes ----> Jenkins console ----> Dashboard ----> slave1 ----> Build History ----> You will see the build history.
+
+----------------------
+RBAC
+------------------------
+=> Roll Based Account Control
+
+=> By default, the user for jenkins is 'Admin User'
+=> To verify the users of jenkins ----> cd /var/lib/jenkins ----> cd users ---> ls ---> You will see a file "users.xml"----> You can see the users
+
+=> In order to restrict the permissions to all the team members working for the same project, we have to create jenkins users with limited/rerquired permissions.
+
+=> This can be made by creating users in the jenkins.
+
+=> Jenkins users have to be created, because the jenkins admin cannot share the id and password for security reasons.
+
+Creation of users in jenkins
+---------------------------------
+Jenkins console ---> Manage jenkins ---> Scroll down to see 'Users' under 'Security' option; and click on it ---> Click on 'Create User' ---> Username: kiran, Password: password, Provide the other details also ---> Click on 'Create User'
+
+Reference:
+Jenkins Admin: kastro ---> All permissions
+Jenkins User: kiran ---> All permissions will come by default
+
+How to set permissions for jenkins users?
+-----------------------------------------------------
+Jenkins console ----> Manage jenkins ----> Security ----> Security Realm: jenkins own user database ----> 'uncheck' allow users to signup ----> Autherization: Select 'Project based Matrix Autherization Strategy' (or) 'Matrix based Security' ----> Add user ----> username: enter the user you have created ----> ok ----> Give the permissions accordingly in the matrix
+
+Logout from admin account.
+
+Login using user credentials and see the changes.
+
+----------------------------------------------
+How to change Jenkins port number?
+----------------------------------------------
+=> Open the Jenkins Service File
+$ sudo vi /lib/systemd/system/jenkins.service
+
+=> Edit the Service File
+# Look for the line starting with ExecStart and append --httpPort=<new_port> to the end of the command. For example, to change the port to 9090, modify the line as follows
+
+$ ExecStart=/usr/bin/java -Djava.awt.headless=true -jar /usr/share/jenkins/jenkins.war --httpPort=9090
+#in the above i'm changing the Jenkins port number to 9090. You can change to any number
+
+=> Reload the Systemd Daemon
+$ sudo systemctl daemon-reload
+
+=> Restart the Jenkins Service
+$ sudo systemctl restart jenkins
+
+=> Verify Jenkins is Running on the New Port
+$ http://your-ec2-instance-public-dns:9090
+
